@@ -1,14 +1,23 @@
 from django.contrib import admin
 from django.urls import path, include
-from academics.views import ClassRoomViewSet
-from rest_framework.routers import DefaultRouter
-from teachers.views import TeacherViewSet
 
-router = DefaultRouter()
-router.register("classes", ClassRoomViewSet)
-router.register("teachers", TeacherViewSet)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/", include(router.urls)),
+
+    path('api/accounts/', include('accounts.urls')),
+    path('api/teachers/', include('teachers.urls')),
+    path('api/students/', include('students.urls')),
+    path('api/academics/', include('academics.urls')),
+]
+
+
+urlpatterns += [
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
