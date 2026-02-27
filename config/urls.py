@@ -14,10 +14,8 @@ urlpatterns = [
     path('api/teachers/', include('teachers.urls')),
     path('api/students/', include('students.urls')),
     path('api/academics/', include('academics.urls')),
-]
 
-
-urlpatterns += [
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+     # 🔐 JWT AUTH
+    path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
