@@ -1,37 +1,47 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsAdmin(BasePermission):
-    """
-    Allows access only to admin (staff or superuser) users.
-    """
     def has_permission(self, request, view):
-        return bool(
-            request.user
-            and request.user.is_authenticated
-            and (request.user.is_staff or request.user.is_superuser)
+        return (
+            request.user.is_authenticated and (
+                request.user.is_staff or
+                request.user.is_superuser or
+                getattr(request.user, "role", None) == "ADMIN"
+            )
         )
 
 
 class IsTeacher(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == "TEACHER"
+        return (
+            request.user.is_authenticated and
+            getattr(request.user, "role", None) == "TEACHER"
+        )
 
 
 class IsStudent(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == "STUDENT"
+        return (
+            request.user.is_authenticated and
+            getattr(request.user, "role", None) == "STUDENT"
+        )
+
 
 class IsAdminOrTeacher(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated and
-            request.user.role in ["ADMIN", "TEACHER"]
+            getattr(request.user, "role", None) in ["ADMIN", "TEACHER"]
         )
 
 
 class ReadOnlyOrAdmin(BasePermission):
     def has_permission(self, request, view):
-        if request.method in ["GET", "HEAD", "OPTIONS"]:
+        if request.method in SAFE_METHODS:
             return request.user.is_authenticated
-        return request.user.role == "ADMIN"
+
+        return (
+            request.user.is_authenticated and
+            getattr(request.user, "role", None) == "ADMIN"
+        )

@@ -5,6 +5,6 @@ from .views import StudentViewSet
 
 
 router = DefaultRouter()
-router.register(r'students', StudentViewSet, basename='student')
+router.register(r'', StudentViewSet, basename='students')
 
 urlpatterns = router.urls
