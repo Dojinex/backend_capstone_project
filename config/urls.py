@@ -1,11 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-# -----------------------------
-# URL Routing for the Project
-# -----------------------------
 urlpatterns = [
     # Django Admin
     path('admin/', admin.site.urls),
